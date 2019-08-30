@@ -1,0 +1,44 @@
+img {
+  width: calc(100vh / 3);
+  height: auto;
+  opacity: 0.2;
+}
+
+.container {
+  position: relative;
+}
+
+.bboxContainer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.labelContainer {
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  color: red;
+  pointer-events: none;
+}
+
+.objRect {
+  fill: transparent;
+  stroke: red;
+  stroke-width: 1;
+}
+
+.objRect:hover {
+  stroke-width: 3;
+}
+
+.rotated {
+  transform: rotate(180deg);
+
+  .labelContainer {
+    transform: rotate(180deg);
+    right: 5px;
+  }
+}

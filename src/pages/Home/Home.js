@@ -8,7 +8,7 @@ const Home = () => {
     <div className="d-flex flex-column h-100">
       {paths.map(path => {
         return (
-          <div key={path._id.$oid} className="flex-grow-1 p-2 border">
+          <div key={path.id} className="flex-grow-1 p-2 border">
             <p>{path.name}</p>
             <h2>
               {path.start_address} - {path.end_address}
@@ -21,7 +21,7 @@ const Home = () => {
               {path.directions.distance / 1000} km - {path.directions.duration}{" "}
               seconds
             </p>
-            <Link className="btn btn-secondary" to={`/path/${path._id.$oid}`}>
+            <Link className="btn btn-secondary" to={`/path/${path.id}`}>
               explore
             </Link>
           </div>

@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
 import classNames from "classnames";
 import { Tooltip } from "reactstrap";
+import { scaleLinear } from "d3-scale";
 import styles from "./DenseImage.module.scss";
 
 const DenseImage = ({ path, filename, rotated, objects }) => {
   const [selectedObject, setSelectedObject] = useState("");
+  const xScale = scaleLinear()
+    .domain([0.0, 1.0])
+    .rangeRound([0, 640]);
+  const yScale = scaleLinear()
+    .domain([0.0, 1.0])
+    .rangeRound([0, 640]);
+
   return (
     <div
       className={classNames(styles.container, { [styles.rotated]: rotated })}
@@ -21,17 +29,22 @@ const DenseImage = ({ path, filename, rotated, objects }) => {
               <clipPath id={"clip_" + filename.replace(".jpg", "")}>
                 {objects
                   .sort((a, b) => {
-                    return b.bbox[2] * b.bbox[3] - a.bbox[2] * a.bbox[3];
+                    return (
+                      xScale(b.bbox[2] - b.bbox[0]) *
+                        yScale(b.bbox[3] - b.bbox[1]) -
+                      xScale(a.bbox[2] - a.bbox[0]) *
+                        yScale(a.bbox[3] - a.bbox[1])
+                    );
                   })
                   .filter(d => d.score >= 0.85)
                   .map((object, i) => {
                     return (
                       <rect
                         key={i}
-                        x={object.bbox[0]}
-                        y={object.bbox[1]}
-                        width={object.bbox[2]}
-                        height={object.bbox[3]}
+                        x={xScale(object.bbox[0])}
+                        y={yScale(object.bbox[1])}
+                        width={xScale(object.bbox[2] - object.bbox[0])}
+                        height={yScale(object.bbox[3] - object.bbox[1])}
                       ></rect>
                     );
                   })}
@@ -47,7 +60,11 @@ const DenseImage = ({ path, filename, rotated, objects }) => {
             />
             {objects
               .sort((a, b) => {
-                return b.bbox[2] * b.bbox[3] - a.bbox[2] * a.bbox[3];
+                return (
+                  xScale(b.bbox[2] - b.bbox[0]) *
+                    yScale(b.bbox[3] - b.bbox[1]) -
+                  xScale(a.bbox[2] - a.bbox[0]) * yScale(a.bbox[3] - a.bbox[1])
+                );
               })
               .filter(d => d.score >= 0.85)
               .map((object, i) => {
@@ -55,10 +72,10 @@ const DenseImage = ({ path, filename, rotated, objects }) => {
                   <React.Fragment key={i}>
                     <rect
                       className={styles.objRect}
-                      x={object.bbox[0]}
-                      y={object.bbox[1]}
-                      width={object.bbox[2]}
-                      height={object.bbox[3]}
+                      x={xScale(object.bbox[0])}
+                      y={yScale(object.bbox[1])}
+                      width={xScale(object.bbox[2] - object.bbox[0])}
+                      height={yScale(object.bbox[3] - object.bbox[1])}
                       onMouseOver={() => {
                         setSelectedObject(object.class_subj);
                       }}

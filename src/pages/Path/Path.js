@@ -42,6 +42,7 @@ const Path = props => {
             <DenseImage
               filename={step[1][0].filename.replace("left", "up")}
               path={props.match.params.id}
+              rotated
             ></DenseImage>
 
             <DenseImage

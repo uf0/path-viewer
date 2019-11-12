@@ -1,7 +1,7 @@
 img {
   width: calc(100vh / 3);
   height: auto;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 .container {
@@ -20,14 +20,15 @@ img {
   position: absolute;
   bottom: 0;
   left: 5px;
-  color: red;
+  color: black;
   pointer-events: none;
+  font-size: 10px;
 }
 
 .objRect {
   fill: transparent;
-  stroke: red;
-  stroke-width: 1;
+  stroke: white;
+  stroke-width: 3;
   cursor: pointer;
 }
 

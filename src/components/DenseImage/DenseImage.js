@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { Tooltip } from "reactstrap";
 import { scaleLinear } from "d3-scale";
 import styles from "./DenseImage.module.scss";
 
 const DenseImage = ({ path, filename, rotated, objects }) => {
-  const [selectedObject, setSelectedObject] = useState("");
+  const [selectedObject, setSelectedObject] = useState({});
+  const textRef = useRef(null);
+
+  const copyToClipboard = () => {
+    textRef.current.select();
+    document.execCommand("copy");
+  };
+
   const xScale = scaleLinear()
     .domain([0.0, 1.0])
     .rangeRound([0, 640]);
@@ -77,10 +84,19 @@ const DenseImage = ({ path, filename, rotated, objects }) => {
                       width={xScale(object.bbox[2] - object.bbox[0])}
                       height={yScale(object.bbox[3] - object.bbox[1])}
                       onMouseOver={() => {
-                        setSelectedObject(object.class_subj);
+                        const copyText = filename
+                          .replace(/_/g, "|")
+                          .replace(".jpg", `|${i}`);
+                        setSelectedObject({
+                          class_subj: object.new_subject,
+                          copyText: copyText
+                        });
                       }}
                       onMouseOut={() => {
-                        setSelectedObject("");
+                        setSelectedObject({});
+                      }}
+                      onClick={() => {
+                        copyToClipboard();
                       }}
                     ></rect>
                   </React.Fragment>
@@ -91,7 +107,12 @@ const DenseImage = ({ path, filename, rotated, objects }) => {
       )}
 
       <div className={styles.labelContainer}>
-        <h4>{selectedObject}</h4>
+        <h4>{selectedObject.class_subj}</h4>
+        <textarea
+          className={styles.textArea}
+          ref={textRef}
+          value={selectedObject.copyText}
+        />
       </div>
     </div>
   );

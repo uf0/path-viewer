@@ -28,10 +28,16 @@ img {
   fill: transparent;
   stroke: red;
   stroke-width: 1;
+  cursor: pointer;
 }
 
 .objRect:hover {
   stroke-width: 3;
+}
+
+.textArea {
+  pointer-events: none;
+  opacity: 0;
 }
 
 .rotated {
